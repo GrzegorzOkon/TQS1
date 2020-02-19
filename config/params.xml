@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<params>
+	<log>
+		<path>aaa</path>
+        <filename>uuu</filename>
+        <postfix></postfix>
+		<lines>x.x.x.x</lines>
+	</log>
+	<log>
+		<path>bbb</path>
+        <filename>iii</filename>
+        <postfix></postfix>
+		<lines>x.x.x.x</lines>
+	</log>
+</params>
