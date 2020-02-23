@@ -28,7 +28,7 @@ public class TQS1App {
 
     static void createJobs(List<Log> logs) {
         for (Log log : logs) {
-            jobs.add(new Job(log.getPath(), log.getLines()));
+            jobs.add(new Job(log.getPath(), log.getFilename(), log.getPostfix(), log.getLines()));
         }
     }
 
@@ -56,7 +56,7 @@ public class TQS1App {
 
     static void printToConsole() {
         for (Message message : messages) {
-            System.out.println(message.getDescription());
+            System.out.println("*** " + message.getDescription() + " ***");
             System.out.println();
             for (int i = message.getResult().size() - 1; i >= 0; i--) {
                 System.out.println(message.getResult().get(i));
@@ -69,7 +69,7 @@ public class TQS1App {
     static void printToFile() {
         try (Writer out = new FileWriter(new java.io.File(TQS1App.getJarFileName() + ".txt"))) {
             for (Message message : messages) {
-                out.write(message.getDescription());
+                out.write("*** " + message.getDescription() + " ***");
                 out.write(System.getProperty("line.separator"));
                 out.write(System.getProperty("line.separator"));
                 for (int i = message.getResult().size() - 1; i >= 0; i--) {

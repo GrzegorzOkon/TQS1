@@ -19,9 +19,10 @@ public class MessageProducerThread extends Thread {
             }
             if (job != null) {
                 Message message = null;
-                try (FileConnection connection = new FileConnection(job.getPath())) {
-                    List<String> result = connection.getLines(job.getLines());
-                    message = new Message(job.getPath(), result);
+                try (FileConnection connection = new FileConnection(job)) {
+                    List<String> lines = connection.getLines(job.getLines());
+                    String filename = connection.getFileName() != null ? connection.getFileName() : job.getPath() + "\\" + job.getFilename();
+                    message = new Message(filename, lines);
                 } catch (Exception e) {
                     throw new AppException(e);
                 }
