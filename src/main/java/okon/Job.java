@@ -1,20 +1,20 @@
 package okon;
 
 public class Job {
-    private String path;
+    private String directory;
     private String filename;
     private String postfix;
     private int lines;
 
-    public Job(String path, String filename, String postfix, int lines) {
-        this.path = path;
+    public Job(String directory, String filename, String postfix, int lines) {
+        this.directory = directory;
         this.filename = filename;
         this.postfix = postfix;
         this.lines = lines;
     }
 
-    public String getPath() {
-        return path;
+    public String getDirectory() {
+        return directory;
     }
 
     public String getFilename() {

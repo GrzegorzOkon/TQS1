@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <params>
 	<log>
-		<path>aaa</path>
-        <filename>uuu</filename>
+		<directory>\\xx.xx.xx.xx\c$\directory\directory</directory>
+        <filename>abc.txt</filename>
         <postfix></postfix>
-		<lines>x.x.x.x</lines>
+		<lines>3</lines>
 	</log>
 	<log>
-		<path>bbb</path>
-        <filename>iii</filename>
-        <postfix></postfix>
-		<lines>x.x.x.x</lines>
+		<directory>C:\directory\directory</directory>
+        <filename>abc</filename>
+        <postfix>yyyyMMdd</postfix>
+		<lines>10</lines>
 	</log>
 </params>

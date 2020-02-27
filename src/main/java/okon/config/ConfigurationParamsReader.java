@@ -22,11 +22,11 @@ public class ConfigurationParamsReader {
                 Node log = logs.item(i);
                 if (log.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) log;
-                    String path = element.getElementsByTagName("path").item(0).getTextContent();
+                    String directory = element.getElementsByTagName("directory").item(0).getTextContent();
                     String filename = element.getElementsByTagName("filename").item(0).getTextContent();
                     String postfix = element.getElementsByTagName("postfix").item(0).getTextContent();
                     Integer lines = Integer.valueOf(element.getElementsByTagName("lines").item(0).getTextContent());
-                    result.add(new Log(path, filename, postfix, lines));
+                    result.add(new Log(directory, filename, postfix, lines));
                 }
             }
         }
