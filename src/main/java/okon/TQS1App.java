@@ -28,7 +28,7 @@ public class TQS1App {
 
     static void createJobs(List<Log> logs) {
         for (Log log : logs) {
-            jobs.add(new Job(log.getDirectory(), log.getFilename(), log.getPostfix(), log.getLines()));
+            jobs.add(new Job(log.getSystem(), log.getDirectory(), log.getFilename(), log.getPostfix(), log.getLines()));
         }
     }
 

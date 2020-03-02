@@ -2,7 +2,7 @@ package okon;
 
 import okon.exception.AppException;
 
-import java.nio.file.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,30 +20,38 @@ public class MessageProducerThread extends Thread {
                 }
             }
             if (job != null) {
-                Message message = null;
-
-                List<FilenameVisitor> visitors = new ArrayList<>();
-                FileDetector detector = new FileDetector(job.getDirectory());
-                FilenameVisitor visitor1 = new FilenamePartVisitor(job.getFilename());
-                visitors.add(visitor1);
-                if (job.getPostfix() != null && !job.getPostfix().equals("")) {
-                    FilenameVisitor visitor2 = new FilenameDatepartVisitor(job.getPostfix());
-                    visitors.add(visitor2);
-                }
-                Path path = detector.accept(visitors);
-
-                if (path != null) {
-                    try (FileConnection connection = new FileConnection(path)) {
-                        List<String> readedLines = connection.getLastLines(job.getLines());
-                        message = new Message(path.toString(), readedLines);
-                    } catch (Exception e) {
-                        throw new AppException(e);
+                Path pathToRead = getPathToRead(job);
+                Message message = getMessage(job.getSystem(), pathToRead, job.getLines());
+                if (message != null) {
+                    synchronized (messages) {
+                        messages.add(message);
                     }
-                }
-                synchronized (messages) {
-                    messages.add(message);
                 }
             }
         }
+    }
+
+    private Path getPathToRead(Job job) {
+        FileDetector detector = FileDetectorFactory.makeDetector(job.getSystem(), job.getDirectory());
+        List<FilenameVisitor> visitors = new ArrayList<>();
+        FilenameVisitor visitor1 = new FilenamePartVisitor(job.getFilename());
+        visitors.add(visitor1);
+        if (job.getPostfix() != null && !job.getPostfix().equals("")) {
+            FilenameVisitor visitor2 = new FilenameDatepartVisitor(job.getPostfix());
+            visitors.add(visitor2);
+        }
+        return detector.accept(visitors);
+    }
+
+    private Message getMessage(String system, Path path, int lines) {
+        if (path != null) {
+            try (FileConnection connection = FileConnectionFactory.makeConnection(system, path)) {
+                List<String> readedLines = connection.getLastLines(lines);
+                return new Message(path.toString(), readedLines);
+            } catch (Exception e) {
+                throw new AppException(e);
+            }
+        }
+        return null;
     }
 }
