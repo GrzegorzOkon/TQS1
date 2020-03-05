@@ -4,18 +4,18 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilenamePartVisitor extends FilenameVisitor {
-    private String filenamePart;
+public class FilenameExactVisitor extends FilenameVisitor {
+    private String exactFilename;
 
-    public FilenamePartVisitor(String filenamePart) {
-        this.filenamePart = filenamePart;
+    public FilenameExactVisitor(String exactFilename) {
+        this.exactFilename = exactFilename;
     }
 
     @Override
     public List<Path> visit(List<Path> paths) {
         List<Path> result = new ArrayList<>();
         for (Path path : paths) {
-            if (path.getFileName().toString().contains(filenamePart)) {
+            if (path.getFileName().toString().equals(exactFilename)) {
                 result.add(path);
             }
         }

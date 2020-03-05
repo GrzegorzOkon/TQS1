@@ -3,8 +3,8 @@ package okon;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FilenameDatepartVisitor extends FilenamePartVisitor {
-    public FilenameDatepartVisitor(String datePattern) {
+public class FilenameDatepartialVisitor extends FilenamePartialVisitor {
+    public FilenameDatepartialVisitor(String datePattern) {
         super(getCurrentDate(datePattern));
     }
 

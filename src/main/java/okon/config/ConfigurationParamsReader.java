@@ -1,6 +1,7 @@
 package okon.config;
 
 import okon.Log;
+import okon.LogMatch;
 import okon.exception.AppException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigurationParamsReader {
     public static ArrayList<Log> readLogParams(File file) {
@@ -24,10 +26,14 @@ public class ConfigurationParamsReader {
                     Element element = (Element) log;
                     String system = element.getElementsByTagName("system").item(0).getTextContent();
                     String directory = element.getElementsByTagName("directory").item(0).getTextContent();
-                    String filename = element.getElementsByTagName("filename").item(0).getTextContent();
-                    String postfix = element.getElementsByTagName("postfix").item(0).getTextContent();
+                    List<LogMatch> matches = new ArrayList<>();
+                    for (int j = 0, size = element.getElementsByTagName("filename").getLength(); j < size; j++) {
+                        String match = element.getElementsByTagName("filename").item(j).getAttributes().item(0).getNodeValue();
+                        String filename = element.getElementsByTagName("filename").item(j).getTextContent();
+                        matches.add(new LogMatch(match, filename));
+                    }
                     Integer lines = Integer.valueOf(element.getElementsByTagName("lines").item(0).getTextContent());
-                    result.add(new Log(system, directory, filename, postfix, lines));
+                    result.add(new Log(system, directory, matches, lines));
                 }
             }
         }

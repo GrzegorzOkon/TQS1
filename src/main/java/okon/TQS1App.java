@@ -28,7 +28,7 @@ public class TQS1App {
 
     static void createJobs(List<Log> logs) {
         for (Log log : logs) {
-            jobs.add(new Job(log.getSystem(), log.getDirectory(), log.getFilename(), log.getPostfix(), log.getLines()));
+            jobs.add(new Job(log.getSystem(), log.getDirectory(), log.getMatches(), log.getLines()));
         }
     }
 
@@ -55,29 +55,33 @@ public class TQS1App {
     }
 
     static void printToConsole() {
-        for (Message message : messages) {
-            System.out.println("*** " + message.getDescription() + " ***");
-            System.out.println();
-            for (int i = message.getResult().size() - 1; i >= 0; i--) {
-                System.out.println(message.getResult().get(i));
+        for (int i = 0, size = messages.size(); i < size; i++) {
+            System.out.println("*** " + messages.get(i).getDescription() + " ***");
+            for (int j = messages.get(i).getResult().size() - 1; j >= 0; j--) {
+                System.out.println();
+                System.out.print(messages.get(i).getResult().get(j));
+
             }
-            System.out.println();
-            System.out.println();
+            if (i < size - 1) {
+                System.out.println();
+                System.out.println();
+            }
         }
     }
 
     static void printToFile() {
         try (Writer out = new FileWriter(new java.io.File(TQS1App.getJarFileName() + ".txt"))) {
-            for (Message message : messages) {
-                out.write("*** " + message.getDescription() + " ***");
+            for (int i = 0, size = messages.size(); i < size; i++) {
+                out.write("*** " + messages.get(i).getDescription() + " ***");
                 out.write(System.getProperty("line.separator"));
-                out.write(System.getProperty("line.separator"));
-                for (int i = message.getResult().size() - 1; i >= 0; i--) {
-                    out.write(message.getResult().get(i));
+                for (int j = messages.get(i).getResult().size() - 1; j >= 0; j--) {
+                    out.write(System.getProperty("line.separator"));
+                    out.write(messages.get(i).getResult().get(j));
+                }
+                if (i < size - 1) {
+                    out.write(System.getProperty("line.separator"));
                     out.write(System.getProperty("line.separator"));
                 }
-                out.write(System.getProperty("line.separator"));
-                out.write(System.getProperty("line.separator"));
             }
         } catch (Exception e) {
             throw new AppException(e);

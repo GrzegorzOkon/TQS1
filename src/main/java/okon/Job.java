@@ -1,17 +1,17 @@
 package okon;
 
+import java.util.List;
+
 public class Job {
     private String system;
     private String directory;
-    private String filename;
-    private String postfix;
+    private List<LogMatch> matches;
     private int lines;
 
-    public Job(String system, String directory, String filename, String postfix, int lines) {
+    public Job(String system, String directory, List<LogMatch> matches, int lines) {
         this.system = system;
         this.directory = directory;
-        this.filename = filename;
-        this.postfix = postfix;
+        this.matches = matches;
         this.lines = lines;
     }
 
@@ -21,11 +21,7 @@ public class Job {
         return directory;
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getPostfix() { return postfix; }
+    public List<LogMatch> getMatches() { return matches; }
 
     public int getLines() {
         return lines;

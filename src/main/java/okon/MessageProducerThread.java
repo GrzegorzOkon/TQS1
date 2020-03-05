@@ -34,11 +34,8 @@ public class MessageProducerThread extends Thread {
     private Path getPathToRead(Job job) {
         FileDetector detector = FileDetectorFactory.makeDetector(job.getSystem(), job.getDirectory());
         List<FilenameVisitor> visitors = new ArrayList<>();
-        FilenameVisitor visitor1 = new FilenamePartVisitor(job.getFilename());
-        visitors.add(visitor1);
-        if (job.getPostfix() != null && !job.getPostfix().equals("")) {
-            FilenameVisitor visitor2 = new FilenameDatepartVisitor(job.getPostfix());
-            visitors.add(visitor2);
+        for (LogMatch match : job.getMatches()) {
+            visitors.add(FilenameVisitorFactory.makeVisitor(match.getMatch(), match.getFilename()));
         }
         return detector.accept(visitors);
     }

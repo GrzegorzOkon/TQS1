@@ -3,15 +3,14 @@
 	<log>
 		<system>Windows</system>
 		<directory>\\xx.xx.xx.xx\c$\directory\directory</directory>
-        <filename>abc.txt</filename>
-        <postfix></postfix>
+        <filename match = "exact">abc.txt</filename>
 		<lines>3</lines>
 	</log>
 	<log>
 		<system>Windows</system>
 		<directory>C:\directory\directory</directory>
-        <filename>abc</filename>
-        <postfix>yyyyMMdd</postfix>
+		<filename match = "partial">abc</filename>
+        <filename match = "partial by date pattern">yyyyMMdd</filename>
 		<lines>10</lines>
 	</log>
 </params>
