@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<logs>
+    <log>
+        <directory>\\xx.xx.xx.xx\c$\directory\directory</directory>
+        <filename match = "exact">abc.txt</filename>
+        <lines>3</lines>
+        <host_interface>server-windows</host_interface>
+        <credentials_interface></credentials_interface>
+    </log>
+    <log>
+        <directory>C:\directory\directory</directory>
+        <filename match = "partial">abc</filename>
+        <filename match = "partial by date pattern">yyyyMMdd</filename>
+        <lines>10</lines>
+        <host_interface>server-unix</host_interface>
+        <credentials_interface>unix-user-auth</credentials_interface>
+    </log>
+</logs>

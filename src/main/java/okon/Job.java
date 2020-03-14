@@ -1,29 +1,25 @@
 package okon;
 
-import java.util.List;
-
 public class Job {
-    private String system;
-    private String directory;
-    private List<LogMatch> matches;
-    private int lines;
+    private Log log;
+    private Host host;
+    private Authorization authorization;
 
-    public Job(String system, String directory, List<LogMatch> matches, int lines) {
-        this.system = system;
-        this.directory = directory;
-        this.matches = matches;
-        this.lines = lines;
+    public Job(Log log, Host host, Authorization authorization) {
+        this.log = log;
+        this.host = host;
+        this.authorization = authorization;
     }
 
-    public String getSystem() { return system; }
-
-    public String getDirectory() {
-        return directory;
+    public Log getLog() {
+        return log;
     }
 
-    public List<LogMatch> getMatches() { return matches; }
+    public Host getHost() {
+        return host;
+    }
 
-    public int getLines() {
-        return lines;
+    public Authorization getAuthorization() {
+        return authorization;
     }
 }

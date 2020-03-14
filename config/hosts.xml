@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<hosts>
+    <host>
+        <host_interface>server-unix</host_interface>
+        <system>Unix</system>
+        <ip>x.x.x.x</ip>
+        <port>xxxx</port>
+    </host>
+    <host>
+        <host_interface>server-windows</host_interface>
+        <system>Windows</system>
+        <ip></ip>
+        <port></port>
+    </host>
+</hosts>

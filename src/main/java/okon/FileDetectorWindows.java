@@ -52,4 +52,7 @@ public class FileDetectorWindows extends FileDetector {
         }
         return null;
     }
+
+    @Override
+    public void close() throws Exception {}
 }

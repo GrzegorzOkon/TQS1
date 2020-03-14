@@ -21,7 +21,7 @@ public class MessageProducerThread extends Thread {
             }
             if (job != null) {
                 Path pathToRead = getPathToRead(job);
-                Message message = getMessage(job.getSystem(), pathToRead, job.getLines());
+                Message message = getMessage(job.getHost().getSystem(), pathToRead, job.getLog().getLines());
                 if (message != null) {
                     synchronized (messages) {
                         messages.add(message);
@@ -32,12 +32,15 @@ public class MessageProducerThread extends Thread {
     }
 
     private Path getPathToRead(Job job) {
-        FileDetector detector = FileDetectorFactory.makeDetector(job.getSystem(), job.getDirectory());
-        List<FilenameVisitor> visitors = new ArrayList<>();
-        for (LogMatch match : job.getMatches()) {
-            visitors.add(FilenameVisitorFactory.makeVisitor(match.getMatch(), match.getFilename()));
+        try (FileDetector detector = FileDetectorFactory.makeDetector(job.getHost().getSystem(), job.getAuthorization(), job.getLog().getDirectory())) {
+            List<FilenameVisitor> visitors = new ArrayList<>();
+            for (LogMatch match : job.getLog().getMatches()) {
+                visitors.add(FilenameVisitorFactory.makeVisitor(match.getMatch(), match.getFilename()));
+            }
+            return detector.accept(visitors);
+        } catch (Exception e) {
+            throw new AppException(e);
         }
-        return detector.accept(visitors);
     }
 
     private Message getMessage(String system, Path path, int lines) {

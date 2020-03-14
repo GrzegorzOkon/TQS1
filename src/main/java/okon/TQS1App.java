@@ -1,6 +1,8 @@
 package okon;
 
-import okon.config.ConfigurationParamsReader;
+import okon.config.AuthorizationConfigReader;
+import okon.config.HostConfigReader;
+import okon.config.LogConfigReader;
 import okon.exception.AppException;
 
 import java.io.File;
@@ -22,14 +24,53 @@ public class TQS1App {
     }
 
     static void initializeQueue() {
-        List<Log> logs = ConfigurationParamsReader.readLogParams(new File("./config/params.xml"));
-        createJobs(logs);
+        List<Log> logs = LogConfigReader.readParams((new File("./config/logs.xml")));
+        List<Host> hosts = HostConfigReader.readParams((new File("./config/hosts.xml")));
+        List<Authorization> authorizations = AuthorizationConfigReader.readParams(new File("./config/server-auth.xml"));
+        createJobs(logs, hosts, authorizations);
     }
 
-    static void createJobs(List<Log> logs) {
+    static void createJobs(List<Log> logs, List<Host> hosts, List<Authorization> credentials) {
         for (Log log : logs) {
-            jobs.add(new Job(log.getSystem(), log.getDirectory(), log.getMatches(), log.getLines()));
+            Job job = new Job(log, matchHostToLog(log, hosts), matchAuthorizationToLog(log, credentials));
+            jobs.add(job);
         }
+    }
+
+   static Host matchHostToLog(Log log, List<Host> hosts) {
+        if (isHostPresent(log)) {
+            for (Host host : hosts) {
+                if (log.getHostInterface().equals(host.getHostInterface())) {
+                    return host;
+                }
+            }
+        }
+        return null;
+    }
+
+    static Authorization matchAuthorizationToLog(Log log, List<Authorization> authorizations) {
+        if (isAuthorizationPresent(log)) {
+            for (Authorization authorization : authorizations) {
+                if (log.getAuthorizationInterface().equals(authorization.getCredentialsInterface())) {
+                    return authorization;
+                }
+            }
+        }
+        return null;
+    }
+
+    static boolean isHostPresent(Log log) {
+        if (!log.getHostInterface().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
+    static boolean isAuthorizationPresent(Log log) {
+        if (!log.getAuthorizationInterface().equals("")) {
+            return true;
+        }
+        return false;
     }
 
     static void startThreadPool(int threadSum) {
@@ -60,11 +101,11 @@ public class TQS1App {
             for (int j = messages.get(i).getResult().size() - 1; j >= 0; j--) {
                 System.out.println();
                 System.out.print(messages.get(i).getResult().get(j));
-
             }
             if (i < size - 1) {
-                System.out.println();
-                System.out.println();
+                for (int k = 0; k < 3; k++) {
+                    System.out.println();
+                }
             }
         }
     }
@@ -79,8 +120,9 @@ public class TQS1App {
                     out.write(messages.get(i).getResult().get(j));
                 }
                 if (i < size - 1) {
-                    out.write(System.getProperty("line.separator"));
-                    out.write(System.getProperty("line.separator"));
+                    for (int k = 0; k < 3; k++) {
+                        out.write(System.getProperty("line.separator"));
+                    }
                 }
             }
         } catch (Exception e) {

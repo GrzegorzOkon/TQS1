@@ -14,8 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigurationParamsReader {
-    public static ArrayList<Log> readLogParams(File file) {
+public class LogConfigReader {
+    public static ArrayList<Log> readParams(File file) {
         Element config = parseXml(file);
         ArrayList<Log> result = new ArrayList<>();
         NodeList logs = config.getElementsByTagName("log");
@@ -24,7 +24,6 @@ public class ConfigurationParamsReader {
                 Node log = logs.item(i);
                 if (log.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) log;
-                    String system = element.getElementsByTagName("system").item(0).getTextContent();
                     String directory = element.getElementsByTagName("directory").item(0).getTextContent();
                     List<LogMatch> matches = new ArrayList<>();
                     for (int j = 0, size = element.getElementsByTagName("filename").getLength(); j < size; j++) {
@@ -33,7 +32,9 @@ public class ConfigurationParamsReader {
                         matches.add(new LogMatch(match, filename));
                     }
                     Integer lines = Integer.valueOf(element.getElementsByTagName("lines").item(0).getTextContent());
-                    result.add(new Log(system, directory, matches, lines));
+                    String host_interface = element.getElementsByTagName("host_interface").item(0).getTextContent();
+                    String credentials_interface = element.getElementsByTagName("credentials_interface").item(0).getTextContent();
+                    result.add(new Log(directory, matches, lines, host_interface, credentials_interface));
                 }
             }
         }

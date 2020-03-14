@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<credentials>
+    <user>
+        <authorization_interface>unix-user-auth</authorization_interface>
+        <login>616161</login>
+        <password>616161</password>
+        <domain>ddd</domain>
+    </user>
+</credentials>
