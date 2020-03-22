@@ -1,6 +1,6 @@
 package okon;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +12,10 @@ public class FilenamePartialVisitor extends FilenameVisitor {
     }
 
     @Override
-    public List<Path> visit(List<Path> paths) {
-        List<Path> result = new ArrayList<>();
-        for (Path path : paths) {
-            if (path.getFileName().toString().contains(partialFilename)) {
+    public List<String> visit(List<String> paths) {
+        List<String> result = new ArrayList<>();
+        for (String path : paths) {
+            if (Paths.get(path).getFileName().toString().contains(partialFilename)) {
                 result.add(path);
             }
         }

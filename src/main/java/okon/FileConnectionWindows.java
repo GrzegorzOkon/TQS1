@@ -7,15 +7,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileConnectionWindows extends FileConnection {
     private ReversedLinesFileReader reader;
 
-    public FileConnectionWindows(Path path) {
+    public FileConnectionWindows(String path) {
         try {
-            connect(path.toFile());
+            connect(Paths.get(path).toFile());
         } catch (IOException e) {
             throw new AppException(e);
         }

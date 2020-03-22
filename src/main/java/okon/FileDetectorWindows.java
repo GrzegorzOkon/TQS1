@@ -13,13 +13,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileDetectorWindows extends FileDetector {
-    private List<Path> filePaths;
+    private List<String> filePaths;
 
     public FileDetectorWindows(String directoryPath) {
         filePaths = getFilePaths(Paths.get(directoryPath));
     }
 
-    private List<Path> getFilePaths(Path directoryPath) {
+    private List<String> getFilePaths(Path directoryPath) {
+        List<Path> paths = walkThroughtDirectory(directoryPath);
+        List<String> result = new ArrayList<>();
+        for (Path path : paths) {
+            result.add(path.toString());
+        }
+        return result;
+    }
+
+    private List<Path> walkThroughtDirectory(Path directoryPath) {
         List<Path> result = null;
         try (Stream<Path> walk = Files.walk(directoryPath, 1)) {
             result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
@@ -30,22 +39,15 @@ public class FileDetectorWindows extends FileDetector {
     }
 
     @Override
-    public Path accept(FilenameVisitor visitor) {
-        List<Path> paths = new ArrayList<>(filePaths);
-        paths = visitor.visit(paths);
-        return getNewestPath(paths);
-    }
-
-    @Override
-    public Path accept(List<FilenameVisitor> visitors) {
-        List<Path> paths = new ArrayList<>(filePaths);
+    public String accept(List<FilenameVisitor> visitors) {
+        List<String> paths = new ArrayList<>(filePaths);
         for (FilenameVisitor visitor : visitors) {
             paths = visitor.visit(paths);
         }
         return getNewestPath(paths);
     }
 
-    private Path getNewestPath(List<Path> paths) {
+    private String getNewestPath(List<String> paths) {
         if (paths != null && paths.size() > 0) {
             Collections.sort(paths, Collections.reverseOrder());
             return paths.get(0);
