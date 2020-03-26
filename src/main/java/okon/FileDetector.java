@@ -2,6 +2,6 @@ package okon;
 
 import java.util.List;
 
-public abstract class FileDetector implements AutoCloseable {
+public interface FileDetector {
     public abstract String accept(List<FilenameVisitor> visitors);
 }

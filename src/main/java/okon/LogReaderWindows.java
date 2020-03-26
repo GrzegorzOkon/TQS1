@@ -6,15 +6,14 @@ import org.apache.commons.io.input.ReversedLinesFileReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileConnectionWindows extends FileConnection {
+public class LogReaderWindows implements LogReader {
     private ReversedLinesFileReader reader;
 
-    public FileConnectionWindows(String path) {
+    public LogReaderWindows(String path) {
         try {
             connect(Paths.get(path).toFile());
         } catch (IOException e) {
@@ -36,18 +35,10 @@ public class FileConnectionWindows extends FileConnection {
                     result.add(line);
                 }
             }
-        } catch (IOException e) {
-            throw new AppException(e);
-        }
-        return result;
-    }
-
-    @Override
-    public void close(){
-        try {
             reader.close();
         } catch (IOException e) {
             throw new AppException(e);
         }
+        return result;
     }
 }

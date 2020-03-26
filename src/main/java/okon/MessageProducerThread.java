@@ -14,8 +14,7 @@ public class MessageProducerThread extends Thread {
                 }
             }
             if (job != null) {
-                String pathToLog = MessageManager.searchPathToFile(job);
-                Message message = MessageManager.getMessage(job.getHost(), job.getAuthorization(), job.getLog(), pathToLog);
+                Message message = MessageManager.getMessage(job.getHost(), job.getAuthorization(), job.getLog());
                 if (message != null) {
                     synchronized (messages) {
                         messages.add(message);

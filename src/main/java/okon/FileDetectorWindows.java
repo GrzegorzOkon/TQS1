@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileDetectorWindows extends FileDetector {
+public class FileDetectorWindows implements FileDetector {
     private List<String> filePaths;
 
-    public FileDetectorWindows(String directoryPath) {
-        filePaths = getFilePaths(Paths.get(directoryPath));
+    public FileDetectorWindows(Log log) {
+        filePaths = getFilePaths(Paths.get(log.getDirectory()));
     }
 
     private List<String> getFilePaths(Path directoryPath) {
@@ -54,7 +54,4 @@ public class FileDetectorWindows extends FileDetector {
         }
         return null;
     }
-
-    @Override
-    public void close() throws Exception {}
 }

@@ -2,12 +2,12 @@ package okon;
 
 import okon.exception.AppException;
 
-public abstract class FileDetectorFactory {
-    public static FileDetector makeDetector(Host host, HostConnection connection, Log log) {
+public class LogReaderFactory {
+    public static LogReader makeReader(Host host, HostConnection connection, String path) {
         if (host.getSystem().equals("Windows")) {
-            return new FileDetectorWindows(log);
+            return new LogReaderWindows(path);
         } else if (host.getSystem().equals("Unix")) {
-            return new FileDetectorUnix(connection, log);
+            return new LogReaderUnix(connection, path);
         } else {
             throw new AppException("Błędnie podana nazwa systemu.");
         }

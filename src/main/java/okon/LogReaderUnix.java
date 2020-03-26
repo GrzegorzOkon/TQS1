@@ -2,51 +2,35 @@ package okon;
 
 import com.jcraft.jsch.*;
 import okon.exception.AppException;
-import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
-public class FileConnectionUnix extends FileConnection {
-    private Session session;
+public class LogReaderUnix implements LogReader {
+    private HostConnection connection;
     private String path;
 
-    public FileConnectionUnix(Host host, Authorization authorization, String path) {
-        try {
-            this.path = path;
-            connect(host.getIp(), host.getPort(), authorization.getUsername(), authorization.getPassword());
-        } catch (JSchException e) {
-            throw new AppException("Błąd połączenia ssh.");
-        };
-    }
-
-    private void connect(String hostname, Integer port,  String username, String password) throws JSchException {
-        JSch jSch = new JSch();
-        session = jSch.getSession(username, hostname, port);
-        Properties config = new Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
-        session.setConfig(config);
-        session.setPassword(password);
-        session.connect();
+    public LogReaderUnix(HostConnection connection, String pathToLog) {
+        this.connection = connection;
+        this.path = pathToLog;
     }
 
     @Override
     public List<String> getLastLines(int numLinesToRead) {
         List<String> result = null;
         try {
-            if (!session.isConnected())
+            if (!connection.getSession().isConnected())
                 throw new RuntimeException("Brak połączenia do sesji. Najpierw wywołaj open()!");
             ChannelExec channel = null;
-            channel = (ChannelExec) session.openChannel("exec");
+            channel = (ChannelExec) connection.getSession().openChannel("exec");
             channel.setCommand("tail -n " + numLinesToRead + " " + path);
             PrintStream out = new PrintStream(channel.getOutputStream());
             InputStream in = channel.getInputStream();
             channel.connect();
             result = getChannelOutput(channel, in);
+            Collections.reverse(result);
         } catch (JSchException | IOException e) {
             throw new AppException(e);
         }
@@ -62,10 +46,5 @@ public class FileConnectionUnix extends FileConnection {
         }
         channel.disconnect();
         return result;
-    }
-
-    @Override
-    public void close() throws Exception {
-        session.disconnect();
     }
 }

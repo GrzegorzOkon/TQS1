@@ -6,26 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
-    public static String searchPathToFile(Job job) {
-        try (FileDetector detector = FileDetectorFactory.makeDetector(job.getHost().getSystem(), job.getHost(), job.getAuthorization(), job.getLog().getDirectory())) {
-            List<FilenameVisitor> visitors = new ArrayList<>();
-            for (LogMatch match : job.getLog().getMatches()) {
-                visitors.add(FilenameVisitorFactory.makeVisitor(match.getMatch(), match.getFilename()));
-            }
-            return detector.accept(visitors);
+    public static Message getMessage(Host host, Authorization authorization, Log log) {
+        try (HostConnection connection = HostConnectionFactory.makeConection(host, authorization)) {
+            Message result = null;
+            String pathToFile = findPathToFile(host, connection, log);
+            result = readLog(host, connection, log, pathToFile);
+            return result;
         } catch (Exception e) {
             throw new AppException(e);
         }
     }
 
-    public static Message getMessage(Host host, Authorization authorization, Log log, String path) {
+    private static String findPathToFile(Host host, HostConnection connection, Log log) {
+        FileDetector detector = FileDetectorFactory.makeDetector(host, connection, log);
+        List<FilenameVisitor> visitors = new ArrayList<>();
+        for (LogMatch match : log.getMatches()) {
+            visitors.add(FilenameVisitorFactory.makeVisitor(match.getMatch(), match.getFilename()));
+        }
+        return detector.accept(visitors);
+    }
+
+    private static Message readLog(Host host, HostConnection connection, Log log, String path) {
         if (path != null) {
-            try (FileConnection connection = FileConnectionFactory.makeConnection(host, authorization, path)) {
-                List<String> readedLines = connection.getLastLines(log.getLines());
-                return new Message(path, readedLines);
-            } catch (Exception e) {
-                throw new AppException(e);
-            }
+            LogReader reader = LogReaderFactory.makeReader(host, connection, path);
+            List<String> readedLines = reader.getLastLines(log.getLines());
+            return new Message(path, readedLines);
         }
         return null;
     }

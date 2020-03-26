@@ -2,12 +2,12 @@ package okon;
 
 import okon.exception.AppException;
 
-public class FileConnectionFactory {
-    public static FileConnection makeConnection(Host host, Authorization authorization, String path) {
+public class HostConnectionFactory {
+    public static HostConnection makeConection(Host host, Authorization authorization) {
         if (host.getSystem().equals("Windows")) {
-            return new FileConnectionWindows(path);
+            return new HostConnectionWindows();
         } else if (host.getSystem().equals("Unix")) {
-            return new FileConnectionUnix(host, authorization, path);
+            return new HostConnectionUnix(host, authorization);
         } else {
             throw new AppException("Błędnie podana nazwa systemu.");
         }
