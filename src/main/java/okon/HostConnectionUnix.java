@@ -3,7 +3,7 @@ package okon;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import okon.exception.AppException;
+import okon.exception.HostConnectionException;
 
 import java.util.Properties;
 
@@ -14,7 +14,7 @@ public class HostConnectionUnix implements HostConnection {
         try {
             connect(host.getIp(), host.getPort(), authorization.getUsername(), authorization.getPassword());
         } catch (JSchException e) {
-            throw new AppException("Błąd połączenia ssh.");
+            throw new HostConnectionException("Błąd połączenia ssh.");
         };
     }
 

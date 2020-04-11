@@ -1,8 +1,10 @@
 package okon;
 
 import okon.exception.AppException;
+import okon.exception.HostConnectionException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageManager {
@@ -12,6 +14,8 @@ public class MessageManager {
             String pathToFile = findPathToFile(host, connection, log);
             result = readLog(host, connection, log, pathToFile);
             return result;
+        } catch (HostConnectionException e) {
+            return new Message(log.getDirectory(), Arrays.asList("Brak połączenia do serwera " + host.getIp()));
         } catch (Exception e) {
             throw new AppException(e);
         }
